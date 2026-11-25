@@ -1,0 +1,6 @@
+{
+  "name": "EcoVerify",
+  "description": "AI-powered smart waste management, QR resident verification, and sustainability rewards platform.",
+  "requestFramePermissions": ["camera", "geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

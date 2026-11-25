@@ -1,0 +1,617 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user account and private profile data (resident, collector, or admin).",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 254
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "phone": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "address": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "area": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "photoUrl": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "role": {
+          "type": "string",
+          "enum": ["resident", "collector", "admin"]
+        },
+        "accountStatus": {
+          "type": "string",
+          "enum": ["active", "pending", "suspended", "deactivated"]
+        },
+        "residentId": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 32,
+          "pattern": "^[A-Z0-9\\-]+$"
+        },
+        "assignedArea": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "rewardPoints": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "email",
+        "name",
+        "role",
+        "accountStatus",
+        "residentId",
+        "rewardPoints",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ResidentCard": {
+      "title": "ResidentCard",
+      "description": "QR-lookup card keyed by residentId for collector verification and pickup routing.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "residentId": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 32,
+          "pattern": "^[A-Z0-9\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "area": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "pickupAddress": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "photoUrl": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "accountStatus": {
+          "type": "string",
+          "enum": ["active", "pending", "suspended", "deactivated"]
+        },
+        "rewardPoints": {
+          "type": "integer"
+        },
+        "totalCollections": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "residentId",
+        "name",
+        "area",
+        "accountStatus",
+        "rewardPoints",
+        "totalCollections",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Public non-PII sustainability leaderboard entry for top residents.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "residentId": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 32,
+          "pattern": "^[A-Z0-9\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "area": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "rewardPoints": {
+          "type": "integer"
+        },
+        "totalCollections": {
+          "type": "integer"
+        },
+        "totalWeightKg": {
+          "type": "number"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "residentId",
+        "name",
+        "area",
+        "rewardPoints",
+        "totalCollections",
+        "totalWeightKg",
+        "updatedAt"
+      ]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Trusted admin allowlist document keyed by user UID.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 254
+        },
+        "grantedBy": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "email", "grantedBy", "createdAt"]
+    },
+    "CollectorApplication": {
+      "title": "CollectorApplication",
+      "description": "User application requesting collector verification and area assignment from an admin.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 254
+        },
+        "phone": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 32
+        },
+        "preferredArea": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "badgeNumber": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "approved", "rejected"]
+        },
+        "reviewedBy": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "name",
+        "email",
+        "phone",
+        "preferredArea",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "WasteCollection": {
+      "title": "WasteCollection",
+      "description": "Verified waste collection or pending pickup request record.",
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "residentUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "residentId": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 32,
+          "pattern": "^[A-Z0-9\\-]+$"
+        },
+        "residentName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "collectorUid": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "collectorName": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "area": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "address": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "Plastic",
+            "Paper",
+            "Metal",
+            "Glass",
+            "Organic",
+            "E-waste",
+            "Other / Unrecognized",
+            "Wet Waste",
+            "Dry Waste",
+            "Polythene",
+            "Other / Unknown"
+          ]
+        },
+        "weightKg": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "collected", "rejected"]
+        },
+        "aiCategory": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "aiConfidence": {
+          "type": "number"
+        },
+        "aiExplanation": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "aiRecyclable": {
+          "type": "boolean"
+        },
+        "aiDisposalSuggestion": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "collectorCorrected": {
+          "type": "boolean"
+        },
+        "pointsAwarded": {
+          "type": "integer"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "collectionId",
+        "residentUid",
+        "residentId",
+        "residentName",
+        "collectorUid",
+        "collectorName",
+        "area",
+        "category",
+        "weightKg",
+        "status",
+        "collectorCorrected",
+        "pointsAwarded",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "RewardTransaction": {
+      "title": "RewardTransaction",
+      "description": "Immutable reward point ledger record preventing duplicate point credits.",
+      "type": "object",
+      "properties": {
+        "txId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "residentUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "residentId": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 32,
+          "pattern": "^[A-Z0-9\\-]+$"
+        },
+        "collectionId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "points": {
+          "type": "integer"
+        },
+        "category": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "awardedByUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "awardedByRole": {
+          "type": "string",
+          "enum": ["collector", "admin"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "txId",
+        "residentUid",
+        "residentId",
+        "points",
+        "reason",
+        "awardedByUid",
+        "awardedByRole",
+        "createdAt"
+      ]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Targeted notification sent by collectors or administrators to a user.",
+      "type": "object",
+      "properties": {
+        "notificationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "recipientUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "senderUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "senderName": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "type": {
+          "type": "string",
+          "enum": ["collection_update", "reward", "system", "area_notice"]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "read": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "notificationId",
+        "recipientUid",
+        "senderUid",
+        "type",
+        "title",
+        "message",
+        "read",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AppSettings": {
+      "title": "AppSettings",
+      "description": "Platform configuration for waste reward points and service areas.",
+      "type": "object",
+      "properties": {
+        "settingId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "pointsByCategory": {
+          "type": "object"
+        },
+        "serviceAreas": {
+          "type": "array"
+        },
+        "updatedBy": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["settingId", "pointsByCategory", "serviceAreas", "updatedBy", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user accounts and PII profiles keyed by Firebase Auth UID."
+    },
+    "/residentCards/{residentId}": {
+      "schema": { "$ref": "#/entities/ResidentCard" },
+      "description": "QR-lookup cards keyed by unique residentId for collectors and admins."
+    },
+    "/leaderboard/{userId}": {
+      "schema": { "$ref": "#/entities/LeaderboardEntry" },
+      "description": "Non-PII public sustainability ranking for top residents."
+    },
+    "/admins/{userId}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Trusted administrator allowlist keyed by Firebase Auth UID."
+    },
+    "/collectorApplications/{userId}": {
+      "schema": { "$ref": "#/entities/CollectorApplication" },
+      "description": "Collector onboarding applications awaiting admin review."
+    },
+    "/collections/{collectionId}": {
+      "schema": { "$ref": "#/entities/WasteCollection" },
+      "description": "Waste pickup requests and AI-verified collection records."
+    },
+    "/rewardTransactions/{txId}": {
+      "schema": { "$ref": "#/entities/RewardTransaction" },
+      "description": "Immutable reward points ledger keyed deterministically to prevent duplicate credits."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "User-targeted notifications from collectors and administrators."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/AppSettings" },
+      "description": "Application reward configuration and area directory managed by admins."
+    }
+  }
+}
